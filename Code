@@ -1,0 +1,88 @@
+Write-Host Write-Host
+"What would you like to do?"
+Write-Host Write-Host
+A) Collect new Baseline?"
+Write-Host
+B)
+Begin monitoring files with saved Baseline?"
+Write-Host
+response = Read-Host -Prompt "Please enter 'A' or 'B'"
+Write-Host""
+- ﻿﻿Function Calculate-File-Hash($filepath) { Sfilehash = Get-FileHash -Path Sfilepath -Algorithm SHA512 return $filehash
+- ﻿function erase-baseline-if-already-exists){ baselineexists = Test-Path -Path. \baseline. txt if (Sbaselineexists) { #delete it Remove-Item -path •\baseline. txt
+Eif (Sresponse -eq "A"
+• ToUpper O) {
+#delete basline. txt if is already exists erase-baseline-if-already-exists
+#calculate hash from the target files and store in baseline. txt #collect all files in the target folder
+$files = get-childitem -Path \files
+#for reach, calculate the hash, and write to baseline. txt foreach (Sf in Sfiles) {...}
+#elseif (§response -eq "B". ToUpper 0){
+$FileHashDictionary = @{}
+#Load file|hash from baseline. txt and store them in a dictionary
+$filespathesandhashes = Get-Content -Path \baseline. txt
+---
+
+elseif (Sresponse -eq "B". ToUpperO){
+SfileHashDictionary = @{}
+#Load file|hash from baseline.txt and store them in a dictionary $filespathesandhashes = Get-Content -Path •\baseline.txt
+foreach (Sf in Sfilespathesandhashes) {
+$fileHashDictionary.add(Sf.split("|")[0],Sf.split"|") [1])
+#begin (continously) monitoring files with saved baseline
+while(Strue) {
+start-sleep -Seconds 1
+$files = Get-ChildItem -Path •\files
+#for reach, calculate the hash, and write to baseline. txt
+foreach ($f in $files) {
+Shash = Calculate-File-Hash $f.FullName
+#'$ ($hash. path) |$(Shash. hash)" | out-file -FilePath •\baseline. txt -Append
+#notify is a file has been created
+if (SfileHashDictionary[Shash. path] -eq$nu11) {
+#a file has been created!
+Write-Host "$(Shash.path) has been created!" -ForegroundColor green
+else
+#notify if a file has been changed
+if ($filehashdictionary[Shash.path] -eq Shash.hash) {...}
+else {...}}}}}
+#Define the directory path to monitor
+SwatcherPath = "C:\Users\Del1\Desktop\FIM"
+#Create a fileSystemWatcher Object
+Swatcher = New-Object System. I0.F1leSystemWatcher
+Swatcher. Path = SwatcherPath
+Swatcher IncludeSubdirectories = Strue
+Swatcher. EnableRaisingEvents - Strue #Define the actions when changes occur
+
+#Define the actions when changes occur
+#Sonchange = Register-ObjectEvent -InputObject Swatcher -EventName Changed -Action {
+Sfile = SEvent. SourceEventArgs. FullPath
+schangetype = sevent.bouceeventAngs.ChangeType
+StimeStamp = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+#Create an Eman message
+Seman 1From =
+"markus. Teed@outlook.com"
+SemailTo = "markuslee94@gmail. com"
+Subject = "File Change Detected - SchangeType"
+Sbody = "File: Sfile nChange Type: SchangeType nTime: Stimestamp"
+SsmtpServer = "smtp-mail.outlook.com"
+5smtpPort = 587
+SsmtpUsername
+SsmtpPassword
+#Send email
+ustng SMTP
+Ssmtp = New-Object Net.Mail. SmtpClient (SsmtpServer, SsmtpPort)
+Ssmtp. Enabless] = Strue
+Ssmtp.Credentials = New-Object System. Net. NetworkCredential (SmtpUsername, SsmtpPassword)
+Smessage = New-Object System.Net.Mail.Mat Message(Semai]From, SemailTo, Ssubject, Sbody)
+Smessage. IsBodyHtml =
+Sfalse
+Ssmtp. Send (Smessage)
+}
+同费路
+#Keep the script running
+日tryT
+Ewhile (Strue) {
+#wait for events
+Wait-Event -Timeout 5
+§finally {
+#clean up resources
+Unregister-Event -SourceIdentifier Sonchange. Name Swatcher. DisposeO
+}
